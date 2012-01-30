@@ -1,0 +1,19 @@
+
+The xmega avr chips have a Program and Debug Interface (PDI).  A two
+wire interface.  From the diagrams in the datasheet it appears as if
+the JTAG interface is a front end to the PDI, but there is also a direct
+interface to the PDI using these two pins.  One pin is a clock input and
+the other is a bidirectional command/response serial interface.
+
+The interface resembles a standard uart/serial protocol but uses 9
+data bits, parity, and two stop bits.  And you need a clock synchronized
+to the serial stream.  It begs to be bit-banged.
+
+This particular version uses an mbed.org ARM cortex-m0 based board
+to bit bang the PDI interface and program it.  Further it is not some
+interactive thing, the AVR program is compiled and bundled in with
+the ARM binary.
+
+
+
+
