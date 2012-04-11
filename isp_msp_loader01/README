@@ -1,0 +1,65 @@
+
+This example is using an msp430 launchpad board as an AVR ISP.
+
+The AVR board used initially is the Sparkfun pro micro 8Mhz/3.3v
+
+http://www.sparkfun.com/products/10999
+
+From an AVR document the chips with this serial isp are either byte
+mode or page mode.  This chip atmega32u4 is page mode so you load a
+temporary buffer with 64 instructions, then send one command to program
+that buffer into a page of flash.
+
+The serial protocol is quite trivial so writing code to use it or modify
+this program is simple.
+
+At this time the code only supports one page/buffer, 64 instructions.
+
+At this time not worrying about exact timing, it is fast enough using
+count to N loops.
+
+promicro board JP6 (right side)
+
+1
+2   gnd
+3   reset
+4   vcc
+5
+6
+7
+8
+9   sck
+10  miso
+11  mosi
+12
+
+msp
+
+p1.4    to mosi
+p1.5    to miso
+p1.6    to sck
+p1.7    to reset
+
+also grab vcc and gnd off of the msp430 board, 6 jumpers/wires total.
+
+This was developed/tested against an msp430g2553 which comes with one
+flavor of the msp430 launchpad kit.  That part has a uart, the parts
+that come with the other flavor of launchpad kit (I dont know that you
+have a choice what you get) do not have uarts.  Set the define in the
+source file to build with the UART output.  The uart output is on p1.2.
+
+Now not all msp430 parts have the same complement of internals and
+register addresses so verify the P1DIR, P1OUT registers at a minimum
+match what is in this program.
+
+
+
+
+This is not a bad combination of boards to have to play with, the
+msp430 is ideally $4.30 from ti but it is shipped from outside the us and
+can take a while, or get it for $6 from sparkfun.  The pro micro is a
+usable ardino like board but half to a third of the price of an arduino.
+
+http://www.sparkfun.com/products/10020
+http://www.sparkfun.com/products/10999
+
