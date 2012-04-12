@@ -1,4 +1,8 @@
 
+
+//#define  USE_MSP_UART
+
+
 //promicro board JP6 (right side)
 
 //1
@@ -45,6 +49,8 @@ extern void asmdelay ( unsigned short );
 #define TACCR0  (*((volatile unsigned short *)0x0172))
 #define TACCTL0 (*((volatile unsigned short *)0x0162))
 
+#ifdef USE_MSP_UART
+
 #define UCA0CTL0    (*((volatile unsigned char *)0x060 ))
 #define UCA0CTL1    (*((volatile unsigned char *)0x061 ))
 #define UCA0BR0     (*((volatile unsigned char *)0x062 ))
@@ -59,7 +65,7 @@ extern void asmdelay ( unsigned short );
 #define IE2         (*((volatile unsigned char *)0x001 ))
 #define IFG2        (*((volatile unsigned char *)0x003 ))
 
-
+#endif
 
 #define P1IN  (*((volatile unsigned char *)0x0020))
 #define P1OUT (*((volatile unsigned char *)0x0021))
@@ -69,11 +75,7 @@ extern void asmdelay ( unsigned short );
 #define P1SEL2 (*((volatile unsigned char *)0x0041))
 
 //-------------------------------------------------------------------
-unsigned short dummy ( unsigned short x )
-{
-    return(x+1);
-}
-//-------------------------------------------------------------------
+#ifdef USE_MSP_UART
 void uart_init ( void )
 {
     BCSCTL2 &=~0x06;
@@ -91,16 +93,20 @@ void uart_init ( void )
     P1SEL  |= 0x06;
     P1SEL2 |= 0x06;
 }
+#endif
 //-------------------------------------------------------------------
+#ifdef USE_MSP_UART
 void uart_putc ( unsigned char c )
 {
     while(UCA0STAT&0x01) continue;
     UCA0TXBUF=c;
 }
+#endif
 //-------------------------------------------------------------------
 //-------------------------------------------------------------------
 void hexstrings ( unsigned short d )
 {
+#ifdef USE_MSP_UART
     //unsigned short ra;
     unsigned short rb;
     unsigned short rc;
@@ -115,13 +121,16 @@ void hexstrings ( unsigned short d )
         if(rb==0) break;
     }
     uart_putc(0x20);
+#endif
 }
 //-------------------------------------------------------------------
 void hexstring ( unsigned short d )
 {
+#ifdef USE_MSP_UART
     hexstrings(d);
     uart_putc(0x0D);
     uart_putc(0x0A);
+#endif
 }
 //-------------------------------------------------------------------
 //-------------------------------------------------------------------
@@ -193,8 +202,10 @@ int notmain ( void )
     BCSCTL1 = CALBC1_16MHZ;
     DCOCTL = CALDCO_16MHZ;
 
+#ifdef USE_MSP_UART
     uart_init();
     hexstring(0x1234);
+#endif
 
 
     P1DIR|=(1<<AVR_MOSI_PIN)|(1<<AVR_SCK_PIN)|(1<<AVR_RESET_PIN);
