@@ -1,0 +1,119 @@
+
+This is derived from the simple avr loader one directory up.
+This includes the binary form of the LUFA DFU bootloader.
+
+
+/*
+             LUFA Library
+     Copyright (C) Dean Camera, 2012.
+
+  dean [at] fourwalledcubicle [dot] com
+           www.lufa-lib.org
+*/
+
+/*
+  Copyright 2012  Dean Camera (dean [at] fourwalledcubicle [dot] com)
+
+  Permission to use, copy, modify, distribute, and sell this
+  software and its documentation for any purpose is hereby granted
+  without fee, provided that the above copyright notice appear in
+  all copies and that both that the copyright notice and this
+  permission notice and warranty disclaimer appear in supporting
+  documentation, and that the name of the author not be used in
+  advertising or publicity pertaining to distribution of the
+  software without specific, written prior permission.
+
+  The author disclaim all warranties with regard to this
+  software, including all implied warranties of merchantability
+  and fitness.  In no event shall the author be liable for any
+  special, indirect or consequential damages or any damages
+  whatsoever resulting from loss of use, data or profits, whether
+  in an action of contract, negligence or other tortious action,
+  arising out of or in connection with the use or performance of
+  this software.
+*/
+
+in the file BootloaderDFU.hex.
+
+use the same pinout as before.
+
+
+
+promicro board JP6 (right side)
+
+1
+2   gnd
+3   reset
+4   vcc
+5
+6
+7
+8
+9   sck
+10  miso
+11  mosi
+12
+
+msp
+
+p1.4    to mosi
+p1.5    to miso
+p1.6    to sck
+p1.7    to reset
+
+p1.2 is uart out if you enable it (and have a uart in the msp430).
+
+run the same way as before
+
+mspdebug rf2500
+at the debug prompt
+prog out.hex
+exit
+
+and give it a while to finish
+
+Now unplug at least power and ground from the msp430 board (unplug
+the msp430 board from the computer first).  then take a jumper and
+short A3 (PIN F4) to ground, this tells the bootloader to run itself
+and not our application.
+
+Now you need
+
+http://dfu-programmer.sourceforge.net/
+
+or just
+apt-get install dfu-programmer
+
+now you can do things like
+
+dfu-programmer atmega32u4 dump | hexdump -C
+
+to dump the avr flash.
+
+or
+
+dfu-programmer atmega32u4 flash blinker02.s.hex
+
+which loads the blinker program into avr flash, then to start it
+
+I modified the dfu bootloader code, to be more sane.
+
+int main(void)
+{
++    /* Enable pull-up on the JTAG TCK pin so we can use it to select the mode */
++    PORTF |= (1 << 4);
++    Delay_MS(10);
++    /* If the TCK pin is not jumpered to ground, start the user application instead */
++    RunBootloader = (!(PINF & (1 << 4)));
++    if(RunBootloader == 0) AppStartPtr();
+
+    /* Configure hardware required by the bootloader */
+    SetupHardware();
+
+Before it starts to muck with the system I check for the shorted pin
+if not shorted then run the app.
+
+So after using dfu-programmer to load the app. Pull the jumper used to
+short A3 to gnd, unplug and replug the avr board into the computer.
+And the blinker02 program now blinks the led.
+
