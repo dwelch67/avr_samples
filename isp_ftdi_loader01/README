@@ -1,0 +1,46 @@
+
+This example is using an FTDI UM232H breakout board as an AVR ISP.
+
+The AVR board used initially is the Sparkfun pro micro 8Mhz/3.3v
+
+http://www.sparkfun.com/products/10999
+
+From an AVR document the chips with this serial isp are either byte
+mode or page mode.  This chip atmega32u4 is page mode so you load a
+temporary buffer with 64 instructions, then send one command to program
+that buffer into a page of flash.
+
+The serial protocol is quite trivial so writing code to use it or modify
+this program is simple.
+
+At this time the code only supports one page/buffer, 64 instructions.
+
+promicro board JP6 (right side)
+
+1
+2   gnd
+3   reset
+4   vcc
+5
+6
+7
+8
+9   sck
+10  miso
+11  mosi
+12
+
+ftdi um232h board
+
+j2-2 VIO to j2-3 3V3 I put a solder bridge on mine, a jumper will work
+j1-2 5V0 to j1-3 USB I put a solder bridge on mine, a jumper will work
+
+j2-3  3V3 to vcc
+j2-6  GND to gnd
+j2-7  AD0 to sck
+j2-8  AD1 to mosi
+j2-9  AD2 to miso
+j2-11 AD4 to reset
+
+libftdi is used for the ftdi code
+avra is used for the avr blinker code
