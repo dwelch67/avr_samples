@@ -91,8 +91,8 @@ int pdi_start ( void )
     //release reset for 2-3 avr clocks
     rb=0;
     buf[rb++]=0x80; //SET_BITS_LOW
-      buf[rb++]=0x10; //value
-      buf[rb++]=0x13; //direction
+      buf[rb++]=0x30; //value
+      buf[rb++]=0x33; //direction
     if (ftdi_write_data(&ftdi,buf, rb) != rb)
     {
         printf("Write failed\n");
@@ -103,7 +103,7 @@ int pdi_start ( void )
     rb=0;
     buf[rb++]=0x80; //SET_BITS_LOW
       buf[rb++]=0x00; //value
-      buf[rb++]=0x13; //direction
+      buf[rb++]=0x33; //direction
     if (ftdi_write_data(&ftdi,buf, rb) != rb)
     {
         printf("Write failed\n");
@@ -190,7 +190,7 @@ int program_avr ( void )
     rb=0;
     buf[rb++]=0x80; //SET_BITS_LOW
       buf[rb++]=0x00; //value
-      buf[rb++]=0x13; //direction
+      buf[rb++]=0x33; //direction
     buf[rb++]=0x86; //TCK_DIVISOR,
       buf[rb++]=0x02;
       buf[rb++]=0x00;
@@ -269,7 +269,7 @@ int program_avr ( void )
     rb=0;
     buf[rb++]=0x80; //SET_BITS_LOW
       buf[rb++]=0x00; //value
-      buf[rb++]=0x13; //direction
+      buf[rb++]=0x33; //direction
     if (ftdi_write_data(&ftdi,buf, rb) != rb)
     {
         printf("Write failed\n");
@@ -279,8 +279,8 @@ int program_avr ( void )
     //release reset and let the part run.
     rb=0;
     buf[rb++]=0x80; //SET_BITS_LOW
-      buf[rb++]=0x10; //value
-      buf[rb++]=0x13; //direction
+      buf[rb++]=0x30; //value
+      buf[rb++]=0x33; //direction
     if (ftdi_write_data(&ftdi,buf, rb) != rb)
     {
         printf("Write failed\n");
