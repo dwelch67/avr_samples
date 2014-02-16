@@ -7,7 +7,7 @@
 //#include <usb.h>
 
 #define VENDOR 0x0403
-#define PRODUCT 0x6014
+#define PRODUCT 0x6011
 
 //#define DEBUG
 
@@ -221,6 +221,13 @@ int program_avr ( void )
 
     printf("Erase\n");
     if(pdi_command(0xAC800000,&ra)) return(1);
+    while(1)
+    {
+        if(pdi_command(0xAC800000,&rb)) return(1);
+        if((rb&1)==0) break;
+    }
+
+
     if(pdi_start()) return(1);
 
     printf("----------\n");
@@ -247,7 +254,12 @@ int program_avr ( void )
     if(pdi_command(0x4D000000,&rb)) return(1);
     if(pdi_command(0x4C000000,&rb)) return(1);
     //asmdelay(40000); //4.5ms or more
-    usleep(5000);
+    //usleep(5000);
+    while(1)
+    {
+        if(pdi_command(0xAC800000,&rb)) return(1);
+        if((rb&1)==0) break;
+    }
 
 
     printf("----------\n");
@@ -469,7 +481,7 @@ int main ( int argc, char *argv[] )
     ftdi_usb_reset(&ftdi);
     ftdi_set_interface(&ftdi, INTERFACE_A);
     ftdi_set_latency_timer(&ftdi, 1);
-    ftdi_set_bitmode(&ftdi, 0xfb, BITMODE_MPSSE);
+    ftdi_set_bitmode(&ftdi, 0x0b, BITMODE_MPSSE);
 
     program_avr();
 
