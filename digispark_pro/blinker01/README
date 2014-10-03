@@ -1,0 +1,7 @@
+
+The pinout diagram for the digispark pro shows that the led is tied to
+PORT B1.  It also shows other PORT B pins are used for other stuff
+so we should do a read-modify-write when messing with that port.  Need
+to set DDRB bit 1 (0x02) to a 1 to make it an output then we can
+toggle pin 1 to make the led blink.
+

@@ -1,0 +1,4 @@
+
+git clone -b testing-V2-New  https://github.com/micronucleus/micronucleus
+apt-get install avra
+
